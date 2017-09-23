@@ -1,7 +1,7 @@
 * Fractals
 
 Some on-going play with fractal systems. The first namespace covers Lindenmayer systems.
- 
+More docs coming soon...
 
 ** Usage
 
