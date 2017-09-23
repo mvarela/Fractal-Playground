@@ -3,14 +3,6 @@
             [fractals.l-system :as l]))
 
 
-(def L-dragon (l/create-LS [:F :X]
-                          {:X [:X :+ :Y :F :+]
-                           :Y [:- :F :X :- :Y]}
-                          {:draw #{:F}
-                           :skip #{:X :Y}
-                           :move #{}}
-                          (/ Math/PI 2)))
-
 (defn fix-coords [points, canvas-max]
   (let [[xmax, xmin] ((juxt (partial apply max) (partial apply min)) (map first points))
         [ymax, ymin] ((juxt (partial apply max) (partial apply min)) (map second points))
