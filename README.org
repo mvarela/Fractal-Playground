@@ -1,0 +1,13 @@
+* Fractals
+
+Some on-going play with fractal systems. The first namespace covers Lindenmayer systems.
+ 
+
+** Usage
+
+   TODO
+
+** License
+
+Copyright © 2017 Martín Varela
+Distributed under the MIT License
