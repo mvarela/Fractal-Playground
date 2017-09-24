@@ -36,7 +36,7 @@
 
 (defn render-svg-points [plot-points size]
   (let [xmlns "http://www.w3.org/2000/svg"
-        style "stroke:#5f7f5f; fill:#5f7f5f;"
+        style "stroke:#5f7f5fBB; fill:#5f7f5fBB;"
         points (fix-coords plot-points size)
         do-circle (fn [pt](let [[x y] pt]
                            [:circle {:cx (str x)
