@@ -1,6 +1,7 @@
 (ns fractals.core
   (:require [hiccup.core :as hiccup]
-            [fractals.l-system :as l]))
+            [fractals.l-system :as l]
+            [fractals.barnsley :as b]))
 
 
 (defn fix-coords [points, canvas-max]
@@ -18,9 +19,9 @@
         (map #(map do-scale %) translated-points))
       translated-points)))
 
-(defn render-svg [plot-points size]
-  (let [side size
-        xmlns "http://www.w3.org/2000/svg"
+
+(defn render-svg-path [plot-points size]
+  (let [xmlns "http://www.w3.org/2000/svg"
         style "stroke:#474674; fill:white;"
         points (apply str (map #(str (first %) "," (second %) " ")
                                (fix-coords plot-points size)))]
@@ -32,9 +33,29 @@
                     [:polyline {:points points
                                 :style style}]]]])))
 
+
+(defn render-svg-points [plot-points size]
+  (let [xmlns "http://www.w3.org/2000/svg"
+        style "stroke:#5f7f5f; fill:#5f7f5f;"
+        points (fix-coords plot-points size)
+        do-circle (fn [pt](let [[x y] pt]
+                           [:circle {:cx (str x)
+                                     :cy (str y)
+                                     :r "0.4"
+                                     :style style}]))
+        circles (vec (conj (map do-circle points) :g))]
+    (hiccup/html [:html
+                  [:div {:padding 25}
+                   [:svg {:width size
+                          :height size
+                          :xmlns xmlns}
+                    circles]]])))
+
+
+
 (defn do-LS [ls name rotation i]
   (let [pts (l/draw ls i rotation 0 0 10)]
-    (spit (str name "-" (if (< i 10) (str 0 i) i) ".html") (render-svg pts 1000))))
+    (spit (str name "-" (if (< i 10) (str 0 i) i) ".html") (render-svg-path pts 1000))))
 
 (def L-dragon (l/create-LS [:F :X]
                            {:X [:X :+ :Y :F :+]
@@ -112,12 +133,3 @@
 
 (map (partial do-LS L-hilbert "hilbert" 0) (range 1 10))
 
-
-(def L-seaweed (l/create-LS [:F]
-                            {:F [:F :F :- :push :- :F :+ :F :+ :F :pop :+ :push :+ :F :- :F :- :F :pop]}
-                            {:draw #{:F}
-                             :skip #{}
-                             :move #{}}
-                            0.3490659))
-
-(map (partial do-LS L-seaweed "seaweed" 0) (range 1 5))
