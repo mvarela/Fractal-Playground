@@ -41,7 +41,7 @@
         do-circle (fn [pt](let [[x y] pt]
                            [:circle {:cx (str x)
                                      :cy (str y)
-                                     :r "0.4"
+                                     :r "0.2"
                                      :style style}]))
         circles (vec (conj (map do-circle points) :g))]
     (hiccup/html [:html
@@ -52,6 +52,10 @@
                     circles]]])))
 
 
+(defn do-BF [num-points]
+  (spit "barnsley-fern.html" (render-svg-points (b/barnsley-fern num-points) 500)))
+
+(do-BF 40000)
 
 (defn do-LS [ls name rotation i]
   (let [pts (l/draw ls i rotation 0 0 10)]
