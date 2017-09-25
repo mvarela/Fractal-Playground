@@ -19,7 +19,6 @@
       mb-set (m/mandelbrot size [[0.1 0.9][0.2 1]] 256)]
   (do (m/do-png mb-set size "zoomed.png")
       (m/do-ppm mb-set size 256 "zoomed.ppm")))
-
   ;; Do a 40K points Barnsley fern
   (b/do-BF 40000)
 
@@ -93,5 +92,7 @@
                                   :move #{}}
                                  (/ Math/PI 2))] 
     (dorun (pmap (partial l/do-LS L-hilbert "hilbert" 0) (range 1 10))))
-  (println "All done! Press ctrl-c"))
+
+  (shutdown-agents)
+  (println "All done!"))
 
