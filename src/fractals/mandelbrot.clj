@@ -46,7 +46,7 @@
         f (fn[i](-> i
                    (scale-to-bounds size bounding-box)
                    (in-mandelbrot? depth)))]
-    (map f points)))
+    (pmap f points)))
 
 ;; (defn do-color [i]
 ;;   (let [[r g b] (c/hsl-to-rgb 205 100 (/ i 2.56))]
