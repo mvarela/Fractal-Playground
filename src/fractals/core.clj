@@ -1,12 +1,14 @@
 (ns fractals.core
-  (:require 
+  (:gen-class)
+  (:require
             [fractals.l-system :as l]
             [fractals.barnsley :as b]
             [fractals.mandelbrot :as m]))
 
 
 
-(defn- main [&args]
+(defn -main [& args]
+
   ;; Render the mandelbrot set, full, and zoomed in
 (let [size [800 600]
       mb-set (m/mandelbrot size [[-2.5 -1][1 1]] 256)]
@@ -22,78 +24,74 @@
   (b/do-BF 40000)
 
   ;; Do a bunch of L-systems, at different depths
-  (def L-dragon (l/create-LS [:F :X]
-                             {:X [:X :+ :Y :F :+]
-                              :Y [:- :F :X :- :Y]}
-                             {:draw #{:F}
-                              :skip #{:X :Y}
-                              :move #{}}
-                             (/ Math/PI 2)))
-
-  (map (partial l/do-LS L-dragon "dragon" 0) (range 1 16))
-
-  (def L-snowflake (l/create-LS [:F :- :- :F :- :- :F]
-                                {:F [:F :+ :F :- :- :F :+ :F]}
-                                {:draw #{:F}
-                                 :skip #{}
-                                 :move #{}}
-                                (/ Math/PI 3)))
-
-  (map (partial l/do-LS L-snowflake "koch-snowflake" 0) (range 1 10))
-
-  (def L-sierpinski (l/create-LS [:F :- :G :- :G]
-                                 {:F [:F :- :G :+ :F :+ :G :- :F]
-                                  :G [:G :G]}
-                                 {:draw #{:F :G}
-                                  :skip #{}
-                                  :move #{}}
-                                 (* 2 (/ Math/PI 3))))
-
-  (map (partial l/do-LS L-sierpinski "sierpinski-triangle" 0) (range 1 10))
-
-  (def L-crystal (l/create-LS [:F :+ :F :+ :F :+ :F]
-                              {:F [:F :F :+ :F :+ :+ :F :+ :F]}
-                              {:draw #{:F}
-                               :skip #{}
-                               :move #{}}
-                              (/ Math/PI 2)))
-
-  (map (partial l/do-LS L-crystal "crystal" 0) (range 1 7))
-
-  (def L-square (l/create-LS [:F :+ :F :+ :F :+ :F]
-                             {:F [:F :+ :F :- :F :- :F :F :+ :F :+ :F :- :F]}
-                             {:draw #{:F}
-                              :skip #{}
-                              :move #{}}
-                             (/ Math/PI 2)))
-
-  (map (partial l/do-LS L-square "koch-curve" 0) (range 1 5))
-
-  (def L-box (l/create-LS [:F :+ :F :+ :F :+ :F]
-                          {:F [:F :F :+ :F :+ :F :+ :F :+ :F :F]}
-                          {:draw #{:F}
-                           :skip #{}
-                           :move #{}}
-                          (/ Math/PI 2)))
-
-  (map (partial l/do-LS L-box "box" 0) (range 1 6))
-
-  (def L-rings (l/create-LS [:F :+ :F :+ :F :+ :F]
-                            {:F [:F :F :+ :F :+ :F :+ :F :+ :F :+ :F :- :F]}
-                            {:draw #{:F}
-                             :skip #{}
-                             :move #{}}
-                            (/ Math/PI 2)))
-
-  (map (partial l/do-LS L-rings "rings" 0) (range 1 7))
-
-  (def L-hilbert (l/create-LS [:X]
-                              {:X [:+ :Y :F :- :X :F :X :- :F :Y :+]
-                               :Y [:- :X :F :+ :Y :F :Y :+ :F :X :-]}
+  (let [L-dragon (l/create-LS [:F :X]
+                              {:X [:X :+ :Y :F :+]
+                               :Y [:- :F :X :- :Y]}
                               {:draw #{:F}
                                :skip #{:X :Y}
                                :move #{}}
-                              (/ Math/PI 2)))
+                              (/ Math/PI 2))]
+    (dorun  (pmap #(l/do-LS L-dragon "dragon" 0 %) (range 1 16))))
 
-  (map (partial l/do-LS L-hilbert "hilbert" 0) (range 1 10)))
+
+
+
+  (let [ L-snowflake (l/create-LS [:F :- :- :F :- :- :F]
+                                  {:F [:F :+ :F :- :- :F :+ :F]}
+                                  {:draw #{:F}
+                                   :skip #{}
+                                   :move #{}}
+                                  (/ Math/PI 3))] 
+    (dorun (pmap (partial l/do-LS L-snowflake "koch-snowflake" 0) (range 1 10))))
+
+  (let  [ L-sierpinski (l/create-LS [:F :- :G :- :G]
+                                    {:F [:F :- :G :+ :F :+ :G :- :F]
+                                     :G [:G :G]}
+                                    {:draw #{:F :G}
+                                     :skip #{}
+                                     :move #{}}
+                                    (* 2 (/ Math/PI 3)))] 
+    (dorun (pmap (partial l/do-LS L-sierpinski "sierpinski-triangle" 0) (range 1 10))))
+
+  (let [ L-crystal (l/create-LS [:F :+ :F :+ :F :+ :F]
+                                {:F [:F :F :+ :F :+ :+ :F :+ :F]}
+                                {:draw #{:F}
+                                 :skip #{}
+                                 :move #{}}
+                                (/ Math/PI 2))] 
+    (dorun (pmap (partial l/do-LS L-crystal "crystal" 0) (range 1 7))))
+
+  (let [  L-square (l/create-LS [:F :+ :F :+ :F :+ :F]
+                                {:F [:F :+ :F :- :F :- :F :F :+ :F :+ :F :- :F]}
+                                {:draw #{:F}
+                                 :skip #{}
+                                 :move #{}}
+                                (/ Math/PI 2))] 
+    (dorun (pmap (partial l/do-LS L-square "koch-curve" 0) (range 1 5))))
+
+  (let [  L-box (l/create-LS [:F :+ :F :+ :F :+ :F]
+                             {:F [:F :F :+ :F :+ :F :+ :F :+ :F :F]}
+                             {:draw #{:F}
+                              :skip #{}
+                              :move #{}}
+                             (/ Math/PI 2))] 
+    (dorun (pmap (partial l/do-LS L-box "box" 0) (range 1 6))))
+
+  (let [  L-rings (l/create-LS [:F :+ :F :+ :F :+ :F]
+                               {:F [:F :F :+ :F :+ :F :+ :F :+ :F :+ :F :- :F]}
+                               {:draw #{:F}
+                                :skip #{}
+                                :move #{}}
+                               (/ Math/PI 2))] 
+    (dorun (pmap (partial l/do-LS L-rings "rings" 0) (range 1 7))))
+
+  (let [  L-hilbert (l/create-LS [:X]
+                                 {:X [:+ :Y :F :- :X :F :X :- :F :Y :+]
+                                  :Y [:- :X :F :+ :Y :F :Y :+ :F :X :-]}
+                                 {:draw #{:F}
+                                  :skip #{:X :Y}
+                                  :move #{}}
+                                 (/ Math/PI 2))] 
+    (dorun (pmap (partial l/do-LS L-hilbert "hilbert" 0) (range 1 10))))
+  (println "All done! Press ctrl-c"))
 
