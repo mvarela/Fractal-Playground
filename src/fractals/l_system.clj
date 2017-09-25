@@ -1,4 +1,6 @@
-(ns fractals.l-system)
+(ns fractals.l-system
+  (:require [fractals.util :as util]
+            [hiccup.core :as hiccup] ))
 
 (defrecord L-system [axiom rewrite-rules drawing-rules phi])
 
@@ -46,6 +48,23 @@
 
 (defn draw [ls iter theta x y step]
   (draw* ls (expand ls iter) theta [] x y step []))
+
+(defn- render-svg-path [plot-points size]
+  (let [xmlns "http://www.w3.org/2000/svg"
+        style "stroke:#474674; fill:white;"
+        points (apply str (map #(str (first %) "," (second %) " ")
+                               (util/fix-coords plot-points size)))]
+    (hiccup/html [:html
+                  [:div {:padding 25}
+                   [:svg {:width size
+                          :height size
+                          :xmlns xmlns}
+                    [:polyline {:points points
+                                :style style}]]]])))
+
+(defn do-LS [ls name rotation i]
+  (let [pts (draw ls i rotation 0 0 10)]
+    (spit (str name "-" (if (< i 10) (str 0 i) i) ".html") (render-svg-path pts 1000))))
 
 (defn parse [in]
   (let [stringify (fn [c] (cond

@@ -65,7 +65,8 @@
   [i]
   (let [ icorr (/ i 2.56)
         l (- 100 (* 2 (Math/abs (- 50 icorr))))
-        [r g b] (c/hsl-to-rgb 205 100 l)]
+        h (+ 205 (/ icorr 5))
+        [r g b] (c/hsl-to-rgb 205 l l)]
     (bit-or (bit-shift-left r 16)
             (bit-shift-left g 8)
             b)))
@@ -84,7 +85,7 @@
     (spit name (str header contents))))
 
 
-(defn dopng [points size name]
+(defn do-png [points size name]
   (ImageIO/write
    (let [width (first size)
          height (second size)
@@ -114,14 +115,3 @@
 
 
 
-(def mymandel (mandelbrot [800 600] [[-2.5 -1][1 1]] 255))
-(dopng mymandel [800 600]  "full.png") 
-(do-ppm mymandel [800 600] 256 "full.ppm")
-
-(def mymandel2 (mandelbrot [800 600] [[0.1 0.9][0.2 1]] 255))
-
-(dopng mymandel2 [800 600] "zoomed.png") 
-
-(do-ppm mymandel2 [800 600] 256 "zoomed.ppm")
-
-(do-ppm [400 300] [[-2.5 -1][1 1]] 256)

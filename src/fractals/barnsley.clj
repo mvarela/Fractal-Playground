@@ -1,4 +1,6 @@
-(ns fractals.barnsley)
+(ns fractals.barnsley
+  (:require [fractals.util :as util]
+            [hiccup.core :as hiccup] ))
 
 (def transforms {:f1 [0 0 0 0.16 0 0]
                  :f2 [0.85 0.04 -0.04 0.85 0 1.6]
@@ -34,3 +36,24 @@
 
 (defn barnsley-fern [num-points]
   (scale-bf (barnsley-fern* num-points)))
+
+(defn- render-svg-points [plot-points size]
+  (let [xmlns "http://www.w3.org/2000/svg"
+        style "stroke:#5f7f5fBB; fill:#5f7f5fBB;"
+        points (util/fix-coords plot-points size)
+        do-circle (fn [pt](let [[x y] pt]
+                           [:circle {:cx (str x)
+                                     :cy (str y)
+                                     :r "0.2"
+                                     :style style}]))
+        circles (vec (conj (map do-circle points) :g))]
+    (hiccup/html [:html
+                  [:div {:padding 25}
+                   [:svg {:width size
+                          :height size
+                          :xmlns xmlns}
+                    circles]]])))
+
+
+(defn do-BF [num-points]
+  (spit "barnsley-fern.html" (render-svg-points (barnsley-fern num-points) 500)))
