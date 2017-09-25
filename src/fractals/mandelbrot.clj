@@ -55,7 +55,14 @@
 ;;             b)))
 
 
-(defn do-color [i]
+(defn do-color
+  "Maps a new color with the luminance based on the number of iterations it took
+  for the point to escape the set. The plain mapping is rather dull, so here we
+  focus on the points which are in the boundaries (intuitively, those that took
+  long to escape, but not longest). We calculate the luminance as the distance
+  to the middle value, which results in a nice 'electric' look around the edges
+  of the set"
+  [i]
   (let [ icorr (/ i 2.56)
         l (- 100 (* 2 (Math/abs (- 50 icorr))))
         [r g b] (c/hsl-to-rgb 205 100 l)]
