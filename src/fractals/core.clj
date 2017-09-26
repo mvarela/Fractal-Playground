@@ -11,14 +11,16 @@
 
   ;; Render the mandelbrot set, full, and zoomed in
 (let [size [800 600]
-      mb-set (m/mandelbrot size [[-2.5 -1][1 1]] 256)]
-  (do (m/do-png mb-set size "full.png")
-      (m/do-ppm mb-set size 256 "full.ppm")))
+      depth 256
+      mb-set (m/mandelbrot size [[-2.5 -1][1 1]] depth)]
+  (do (m/do-png mb-set size depth "full.png")
+      (m/do-ppm mb-set size depth "full.ppm")))
 
 (let [size [800 600]
-      mb-set (m/mandelbrot size [[0.1 0.9][0.2 1]] 256)]
-  (do (m/do-png mb-set size "zoomed.png")
-      (m/do-ppm mb-set size 256 "zoomed.ppm")))
+      depth 256
+      mb-set (m/mandelbrot size [[0.1 0.9][0.2 1]] depth)]
+  (do (m/do-png mb-set size depth "zoomed.png")
+      (m/do-ppm mb-set size depth "zoomed.ppm")))
   ;; Do a 40K points Barnsley fern
   (b/do-BF 40000)
 

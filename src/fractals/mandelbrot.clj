@@ -59,13 +59,12 @@
   "Maps a new color with the luminance based on the number of iterations it took
   for the point to escape the set. The plain mapping is rather dull, so here we
   focus on the points which are in the boundaries (intuitively, those that took
-  long to escape, but not longest). We calculate the luminance as the distance
-  to the middle value, which results in a nice 'electric' look around the edges
-  of the set"
-  [i]
-  (let [ icorr (/ i 2.56)
+  long to escape, but not longest). We calculate the luminance and saturation as
+  the distance to the middle value, which results in a nice 'electric' look
+  around the edges of the set"
+  [i, depth]
+  (let [ icorr (/ i (/ depth 100))
         l (- 100 (* 2 (Math/abs (- 50 icorr))))
-        h (+ 205 (/ icorr 5))
         [r g b] (c/hsl-to-rgb 205 l l)]
     (bit-or (bit-shift-left r 16)
             (bit-shift-left g 8)
@@ -85,7 +84,7 @@
     (spit name (str header contents))))
 
 
-(defn do-png [points size name]
+(defn do-png [points size depth name]
   (ImageIO/write
    (let [width (first size)
          height (second size)
@@ -96,7 +95,7 @@
          out (new BufferedImage width height  BufferedImage/TYPE_3BYTE_BGR)]
      (doseq [x (range width)
              y (range height)]
-       (.setRGB out x y (do-color (get-in pts [y x]))))
+       (.setRGB out x y (do-color (get-in pts [y x]) depth)))
      out)
    "png"
    (new File name )))
