@@ -73,6 +73,7 @@
   (let [[x y] size
         contents (->> points
                       (partition x)
+                      (reverse)
                       (map #(apply str (interpose " " (map str %))))
                       (interpose "\n")
                       (apply str)
@@ -89,6 +90,7 @@
          height (second size)
          pts (->> points
                   (partition width)
+;                  (reverse)
                   (map vec)
                   (vec))
          out (new BufferedImage width height  BufferedImage/TYPE_3BYTE_BGR)]
