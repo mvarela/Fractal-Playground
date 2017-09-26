@@ -4,3 +4,7 @@
 /.nrepl-port
 /.hgignore
 /.lein-repl-history
+*png
+*ppm
+*mp4
+target/
