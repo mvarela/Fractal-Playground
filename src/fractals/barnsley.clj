@@ -24,29 +24,26 @@
           yy  (+ (* c x) (* d y) f )]
       [xx yy])))
 
-(defn- barnsley-fern* [num-points]
+(defn barnsley-fern [num-points]
   (let [probs (take num-points (repeatedly rand))
         coeflist (map (comp transforms transform-probs) probs)]
     (reductions apply-transform [0 0] coeflist)))
 
-(defn- scale-bf [points]
-  (map (fn [pt]
-         (let [[x y] pt]
-           [(* 100 x) (* 100 y)])) points))
 
-(defn barnsley-fern [num-points]
-  (scale-bf (barnsley-fern* num-points)))
+;; (defn barnsley-fern [num-points]
+;;   (comp scale-bf barnsley-fern*) num-points)
 
 (defn- render-svg-points [plot-points size]
   (let [xmlns "http://www.w3.org/2000/svg"
         style "stroke:#5f7f5fBB; fill:#5f7f5fBB;"
-        points (util/fix-coords plot-points size)
+        scale-bf (fn [[x y]] [(* 100 x) (* 100 y)])
+        points (util/fix-coords (map scale-bf plot-points) size)
         do-circle (fn [pt](let [[x y] pt]
                            [:circle {:cx (str x)
                                      :cy (str y)
                                      :r "0.2"
                                      :style style}]))
-        circles (vec (conj (map do-circle points) :g))]
+        circles (vec (conj (map do-circle  points) :g))]
     (hiccup/html [:html
                   [:div {:padding 25}
                    [:svg {:width size
@@ -57,3 +54,10 @@
 
 (defn do-BF [num-points]
   (spit "barnsley-fern.html" (render-svg-points (barnsley-fern num-points) 500)))
+
+(ns Marcos)
+
+(def sheet "1001010101011000101011001110001001100111011100011011101010100011011000111101001101001")
+
+(let [letters (partition 7 (seq sheet))]
+  (map (comp char read-string (partial apply str)) (repeat "2r" ) letters))

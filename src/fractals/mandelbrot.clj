@@ -34,7 +34,7 @@
         test  (fn[acc [r i]]
                 (if (or (>= acc iter) (> (+ (* r r)(* i i)) 4))
                   (reduced acc)
-                  (+ acc 1)))
+                  (inc acc)))
         counted (reduce test 0 values)]
     (- iter counted)))
 

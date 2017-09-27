@@ -13,11 +13,11 @@
         theta (Math/atan2  delta-y delta-x)
         next-center (fn [[x y]] [(+ x (* step (Math/cos theta)))
                                  (+ y (* step (Math/sin theta)))])]
-    (take (+ 1 nframes) (iterate next-center start-point))))
+    (take (inc nframes) (iterate next-center start-point))))
 
 (defn interpolate-areas [start-area ratio nframes]
   (let [step (nt/expt ratio (/ 1.0 nframes))]
-    (take (+ 1 nframes)
+    (take (inc nframes)
           (iterate #(/ % step) start-area))))
 
 (defn bounding-box [aspect-ratio area center]
@@ -50,3 +50,5 @@
 ;;(time (animate-mandelbrot 300 200 255 [-1.75 0] [-0.8 0.11] 7 60 24))
 ;;(time (animate-mandelbrot 150 100 100 [-1.75 1] [-0.75 0.13] 7 1400 24))
 ;;ffmpeg -framerate 12 -start_number 0 -i mb-frame-%4d.png out.mp4
+;; (time (animate-mandelbrot 192 108 256 [-1.75 1] [-0.78 0.17] 7 2400 72))
+
