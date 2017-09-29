@@ -1,5 +1,6 @@
 (ns fractals.mandelbrot
-  (:require [com.evocomputing.colors :as c])
+  (:require [com.evocomputing.colors :as c]
+            [clojure.string :refer [join]])
   (:import [java.io File]
            [javax.imageio ImageIO]
            [java.awt Color]
@@ -64,7 +65,8 @@
   [i depth]
   (let [ icorr (/ (* i 100.0) depth)
         l (- 100 (* 2 (Math/abs (- 50 icorr))))
-        [r g b] (c/hsl-to-rgb 205 l l)]
+        s (- 100 (* 1.3 (Math/abs (- 50 icorr))))
+        [r g b] (c/hsl-to-rgb 205 s l)]
     (bit-or (bit-shift-left r 16)
             (bit-shift-left g 8)
             b)))
@@ -74,7 +76,7 @@
         contents (->> points
                       (partition x)
                       (reverse)
-                      (map #(apply str (interpose " " (map str %))))
+                      (map #(join " " (map str %)))
                       (interpose "\n")
                       (apply str)
                       )
@@ -111,7 +113,6 @@
 ;;                       (interpose "\n")
 ;;                       (apply str))]
 ;;     (spit "color.ppm" (str header contents))))
-
 
 
 

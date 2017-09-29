@@ -1,6 +1,7 @@
 (ns fractals.l-system
   (:require [fractals.util :as util]
-            [hiccup.core :as hiccup] ))
+            [hiccup.core :as hiccup]
+            [clojure.string :refer [join]]))
 
 (defrecord L-system [axiom rewrite-rules drawing-rules phi])
 
@@ -17,7 +18,7 @@
   (if (zero? iter)
     segments
     (let [segs (vec (mapcat (partial rewrite ls) segments))]
-      (recur ls segs (- iter 1)))))
+      (recur ls segs (dec iter)))))
 
 (defn expand [ls iter]
   (expand* ls (:axiom ls) iter))
@@ -52,7 +53,7 @@
 (defn- render-svg-path [plot-points size]
   (let [xmlns "http://www.w3.org/2000/svg"
         style "stroke:#474674; fill:white;"
-        points (apply str (map #(str (first %) "," (second %) " ")
+        points (join (map #(str (first %) "," (second %) " ")
                                (util/fix-coords plot-points size)))]
     (hiccup/html [:html
                   [:div {:padding 25}

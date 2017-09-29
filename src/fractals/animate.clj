@@ -52,3 +52,10 @@
 ;;ffmpeg -framerate 12 -start_number 0 -i mb-frame-%4d.png out.mp4
 ;; (time (animate-mandelbrot 192 108 256 [-1.75 1] [-0.78 0.17] 7 2400 72))
 
+(let [[w h] [6000 4000]
+      ar (/ w h)
+      depth 2000
+      zoom (/ 1 10000)
+      bbox (bounding-box ar zoom [-0.78 -0.13])
+      mb (m/mandelbrot [w h] bbox depth)]
+  (m/do-png mb [w h] depth "seahorsetest.png"))
