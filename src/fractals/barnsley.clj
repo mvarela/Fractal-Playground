@@ -52,9 +52,4 @@
 (defn do-BF [num-points]
   (spit "barnsley-fern.html" (render-svg-points (barnsley-fern num-points) 500)))
 
-(ns Marcos)
-
-(def sheet "1001010101011000101011001110001001100111011100011011101010100011011000111101001101001")
-
-(let [letters (partition 7 (seq sheet))]
-  (map (comp char read-string (partial apply str)) (repeat "2r") letters))
+(do-BF 40000)

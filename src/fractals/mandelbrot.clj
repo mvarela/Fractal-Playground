@@ -30,8 +30,7 @@
   "This function will return 0 if the point is in the set, and otherwise, the
   number of remaining iterations remaining (out of the original maximum), if the
   point 'escapes' from the set"
-  (let [[x y] point
-        values (iterate #(map + point (square-z (first %) (second %))) [0 0])
+  (let [values (iterate #(map + point (square-z (first %) (second %))) [0 0])
         test  (fn[acc [r i]]
                 (if (or (>= acc iter) (> (+ (* r r)(* i i)) 4))
                   (reduced acc)
@@ -49,8 +48,9 @@
                    (in-mandelbrot? depth)))]
     (pmap f points)))
 
-;; (defn do-color [i]
-;;   (let [[r g b] (c/hsl-to-rgb 205 100 (/ i 2.56))]
+;; (defn do-color [i depth]
+;;   (let [icorr (/ (* i 100.0) depth)
+;;         [r g b] (c/hsl-to-rgb 205 100 icorr)]
 ;;     (bit-or (bit-shift-left r 16)
 ;;             (bit-shift-left g 8)
 ;;             b)))
