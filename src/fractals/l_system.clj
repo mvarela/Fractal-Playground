@@ -6,7 +6,7 @@
 (defrecord L-system [axiom rewrite-rules drawing-rules phi])
 
 (defn- l-pop [stack]
-  [(last stack) (pop stack)])
+  [(peek stack) (pop stack)])
 
 (defn create-LS [axiom rewrite-rules drawing-rules phi]
   (->L-system axiom rewrite-rules drawing-rules phi))
